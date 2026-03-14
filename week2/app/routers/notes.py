@@ -8,6 +8,12 @@ from ..schemas import NoteCreate, NoteResponse
 router = APIRouter(prefix="/notes", tags=["notes"])
 
 
+@router.get("", response_model=list[NoteResponse])
+def list_notes() -> list[NoteResponse]:
+    rows = db.list_notes()
+    return [NoteResponse(id=r["id"], content=r["content"], created_at=r["created_at"]) for r in rows]
+
+
 @router.post("", response_model=NoteResponse, status_code=201)
 def create_note(body: NoteCreate) -> NoteResponse:
     note_id = db.insert_note(body.content)
