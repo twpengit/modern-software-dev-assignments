@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -34,3 +34,12 @@ def complete_item(item_id: int, db: Session = Depends(get_db)) -> ActionItemRead
     db.flush()
     db.refresh(item)
     return ActionItemRead.model_validate(item)
+
+
+@router.delete("/{item_id}", status_code=204)
+def delete_item(item_id: int, db: Session = Depends(get_db)) -> Response:
+    item = db.get(ActionItem, item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Action item not found")
+    db.delete(item)
+    return Response(status_code=204)

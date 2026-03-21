@@ -32,6 +32,11 @@ poetry run black --line-length 100 .
 poetry run ruff check .
 ```
 
+## Programming Style
+
+### Test Driven
+When asked to add an endpoint, first write a failing test, then implement, then run pre-commit.
+
 ## Architecture
 
 ### Repository layout

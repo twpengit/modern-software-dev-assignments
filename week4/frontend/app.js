@@ -1,6 +1,7 @@
 async function fetchJSON(url, options) {
   const res = await fetch(url, options);
   if (!res.ok) throw new Error(await res.text());
+  if (res.status === 204) return null;
   return res.json();
 }
 
@@ -31,6 +32,14 @@ async function loadActions() {
       };
       li.appendChild(btn);
     }
+    const delBtn = document.createElement('button');
+    delBtn.textContent = 'Delete';
+    delBtn.className = 'delete';
+    delBtn.onclick = async () => {
+      await fetch(`/action-items/${a.id}`, { method: 'DELETE' });
+      loadActions();
+    };
+    li.appendChild(delBtn);
     list.appendChild(li);
   }
 }
